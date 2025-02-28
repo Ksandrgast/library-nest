@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "BAD_REQUEST": "Неверный запрос",
+    "VALIDATION_ERROR": "Ошибка валидации",
+    "UNAUTHORIZED": "Несанкционированный доступ",
+    "FORBIDDEN": "Запрещенное действие",
+    "INTERNAL_SERVER_ERROR": "Внутренняя ошибка сервера"
+  }
+}

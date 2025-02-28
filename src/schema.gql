@@ -1,0 +1,32 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Books {
+  id: Int!
+  title: String!
+  authors: [String!]!
+  description: String!
+  year: Int!
+  pages: Int!
+  quantity: Int!
+  publisher: String!
+}
+
+type Query {
+  findBooks: [Books!]!
+}
+
+type Mutation {
+  createBook(request: CreateBookRequestDto!): Books!
+}
+
+input CreateBookRequestDto {
+  title: String!
+  authors: [String!]!
+  description: String!
+  year: Int!
+  pages: Int!
+  quantity: Int!
+  publisher: String!
+}

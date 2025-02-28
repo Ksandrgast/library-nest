@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "BAD_REQUEST": "Жарамсыз сұрау",
+    "VALIDATION_ERROR": "Тексеру сәтсіздігі",
+    "UNAUTHORIZED": "Рұқсатсыз кіру",
+    "FORBIDDEN": "Құқығы жоқ әрекет",
+    "INTERNAL_SERVER_ERROR": "Сервердің ішкі қатесі"
+  }
+}
