@@ -1,12 +1,37 @@
-import {User} from "../entity/user.entity";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { UserRepository } from "../repository/user.repository";
+import { User } from "../entity/user.entity";
+import { PasswordUtils } from "../utils/password.utils";
 
-export interface UsersService {
+@Injectable()
+export class UsersService {
+  constructor(private readonly userRepository: UserRepository) {}
 
-    signUp(user: User, password: string): Promise<void>;
+  async signUp(user: User, password: string): Promise<void> {
+    user.password = await PasswordUtils.hashPassword(password);
+    await this.userRepository.createUser(user);
+  }
 
-    signIn(username: string, password: string): Promise<void>;
+  async signIn(username: string, password: string): Promise<void> {
+    const user = await this.userRepository.findByUsername(username);
 
-    updateUser(user: User): Promise<void>;
+    if (!user ||!(await PasswordUtils.comparePassword(password, user.password))) {
+      throw new UnauthorizedException("Invalid credentials");
+    }
+  }
 
-    getProfile(username: string): Promise<void>;
+  async getProfileByName(username: string): Promise<User> {
+    const user = await this.userRepository.findByUsername(username);
+    if (!user)
+      throw new NotFoundException("User not found");
+    return user;
+  }
+
+  async updateUser(user: User): Promise<User> {
+    return this.userRepository.updateUser(user);
+  }
 }

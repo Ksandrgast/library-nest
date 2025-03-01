@@ -1,22 +1,16 @@
-import {Module} from "@nestjs/common";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {Books} from "../entity/books.entity";
-import {DefaultBooksService} from "../service/impl/default-books.service";
-import {BooksResolver} from "../resolvers/books.resolvers";
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { BooksService } from "../service/books.service";
+import { BooksController } from "../controller/books.controller";
+import { Book } from "../entity/book.entity";
+import { BookCategory } from "../entity/book-category.entity";
+import { BookLocation } from "../entity/book-location.entity";
+import { BookRepository } from "../repository/book.repository";
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Books]),
-    ],
-    providers: [
-        {
-            provide: 'BooksService',
-            useClass: DefaultBooksService,
-        },
-        DefaultBooksService,
-        BooksResolver
-    ],
+  imports: [TypeOrmModule.forFeature([Book, BookCategory, BookLocation])],
+  controllers: [BooksController],
+  providers: [BooksService, BookRepository],
+  exports: [BooksService],
 })
-
-export class BooksModule {
-}
+export class BooksModule {}

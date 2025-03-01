@@ -1,4 +1,3 @@
 export interface CommonErrorCodeBase {
-
-    [key: string]: string;
+  [key: string]: string;
 }

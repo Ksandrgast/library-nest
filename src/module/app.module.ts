@@ -1,32 +1,28 @@
-import {Module} from "@nestjs/common";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {UsersModule} from "./user.module";
-import {BooksModule} from "./books.module";
-import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { UsersModule } from "./users.module";
+import { BooksModule } from "./books.module";
 
 @Module({
-    imports: [
-        TypeOrmModule.forRoot({
-            type: 'postgres',
-            host: 'localhost',
-            port: 5432,
-            username: 'postgres',
-            password: 'pwd',
-            database: 'library',
-            autoLoadEntities: true,
-            synchronize: true,
-        }),
-        GraphQLModule.forRoot<ApolloDriverConfig>({
-            driver: ApolloDriver,
-            autoSchemaFile: join(process.cwd(), 'src/schema.gql'), // Генерация файла схемы
-            playground: true, // Включение GraphQL Playground
-        }),
-        UsersModule,
-        BooksModule,
-    ],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), // Подключаем поддержку .env
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: "postgres",
+        host: configService.get<string>("DB_HOST"),
+        port: configService.get<number>("DB_PORT"),
+        username: configService.get<string>("DB_USERNAME"),
+        password: configService.get<string>("DB_PASSWORD"),
+        database: configService.get<string>("DB_NAME"),
+        autoLoadEntities: true,
+        synchronize: configService.get<boolean>("DB_SYNC") || false, // Лучше отключить в проде
+      }),
+    }),
+    UsersModule,
+    BooksModule,
+  ],
 })
-
-export class AppModule {
-}
+export class AppModule {}

@@ -1,4 +1,4 @@
-version: '3'
+version: '1'
 services:
   postgresql:
     image: postgres:17
@@ -16,7 +16,7 @@ services:
       - "6379:6379"
     environment:
       REDIS_PASSWORD: redis_password
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
+#  mongo:
+#    image: mongo:latest
+#    ports:
+#      - "27017:27017"

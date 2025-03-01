@@ -1,14 +1,36 @@
-import {Books} from "../entity/books.entity";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { BookRepository } from "../repository/book.repository";
+import { Book } from "../entity/book.entity";
+import { CreateBookDto } from "../dto/create-book.dto";
+import { UpdateBookDto } from "../dto/update-book.dto";
 
-export interface BooksService {
+@Injectable()
+export class BooksService {
+  constructor(
+      @InjectRepository(BookRepository)
+      private readonly bookRepository: BookRepository
+  ) {}
 
-    createBook(book: any): Promise<Books>;
+  async getAllBooks(): Promise<Book[]> {
+    return this.bookRepository.find();
+  }
 
-    getBooks(): Promise<Books[]>;
+  async getBookById(id: string): Promise<Book> {
+    return this.bookRepository.findOneOrFail({ where: { id } });
+  }
 
-    getBookById(bookId: string): Promise<void>;
+  async createBook(createBookDto: CreateBookDto): Promise<Book> {
+    const book = this.bookRepository.create(createBookDto);
+    return this.bookRepository.save(book);
+  }
 
-    updateBook(bookId: string, book: any): Promise<void>;
+  async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
+    await this.bookRepository.update(id, updateBookDto);
+    return this.getBookById(id);
+  }
 
-    deleteBook(bookId: string): Promise<void>;
+  async deleteBook(id: string): Promise<void> {
+    await this.bookRepository.delete(id);
+  }
 }
