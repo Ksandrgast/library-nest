@@ -6,19 +6,22 @@ import { BooksModule } from "./books.module";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // Подключаем поддержку .env
+    // Загружаем переменные окружения из .env
+    ConfigModule.forRoot({ isGlobal: true }),
+
+    // Настройка TypeORM с использованием переменных из .env
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: "postgres",
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("DB_PORT"),
-        username: configService.get<string>("DB_USERNAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        database: configService.get<string>("DB_NAME"),
+        host: configService.get<string>("DB_HOST", "localhost"),
+        port: configService.get<number>("DB_PORT", 5432),
+        username: configService.get<string>("DB_USERNAME", "postgres"),
+        password: configService.get<string>("DB_PASSWORD", "pwd"),
+        database: configService.get<string>("DB_NAME", "library"),
         autoLoadEntities: true,
-        synchronize: configService.get<boolean>("DB_SYNC") || false, // Лучше отключить в проде
+        synchronize: configService.get<boolean>("DB_SYNC"), // В проде выключаем
       }),
     }),
     UsersModule,

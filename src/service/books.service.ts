@@ -8,8 +8,8 @@ import { UpdateBookDto } from "../dto/update-book.dto";
 @Injectable()
 export class BooksService {
   constructor(
-      @InjectRepository(BookRepository)
-      private readonly bookRepository: BookRepository
+    @InjectRepository(Book)
+    private readonly bookRepository: BookRepository,
   ) {}
 
   async getAllBooks(): Promise<Book[]> {
