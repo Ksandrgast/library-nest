@@ -3,12 +3,18 @@ import { Book } from "./book.entity";
 
 @Entity()
 export class BookCategory {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-    @Column({ unique: true })
-    name: string;
+  @Column()
+  titleRu: string;
 
-    @OneToMany(() => Book, (book) => book.category)
-    books: Book[];
+  @Column()
+  titleKk: string;
+
+  @Column()
+  titleEn: string;
+
+  @OneToMany(() => Book, (book) => book.category)
+  books: Book[];
 }

@@ -3,6 +3,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { UsersModule } from "./users.module";
 import { BooksModule } from "./books.module";
+import { CategoryModule } from "./category.module";
+import { LocationModule } from "./location.module";
+import { AuthModule } from "./auth.module";
 
 @Module({
   imports: [
@@ -24,8 +27,11 @@ import { BooksModule } from "./books.module";
         synchronize: configService.get<boolean>("DB_SYNC"), // В проде выключаем
       }),
     }),
+    AuthModule,
     UsersModule,
     BooksModule,
+    CategoryModule,
+    LocationModule,
   ],
 })
 export class AppModule {}

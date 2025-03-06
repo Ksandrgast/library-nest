@@ -29,9 +29,6 @@ export class Book {
   @Column()
   quantity: number;
 
-  @Column()
-  publisher: string;
-
   @ManyToOne(() => BookCategory, (category) => category.books)
   category: BookCategory;
 

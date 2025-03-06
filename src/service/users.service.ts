@@ -1,37 +1,49 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "../repository/user.repository";
 import { User } from "../entity/user.entity";
-import { PasswordUtils } from "../utils/password.utils";
+import { UserRole } from "../enums/user-role.enum";
 
 @Injectable()
 export class UsersService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async signUp(user: User, password: string): Promise<void> {
-    user.password = await PasswordUtils.hashPassword(password);
-    await this.userRepository.createUser(user);
+  async findByLogin(login: string): Promise<User> {
+    const user = await this.userRepository.findByLogin(login);
+    if (!user) throw new NotFoundException("User not found");
+    return user;
   }
 
-  async signIn(username: string, password: string): Promise<void> {
-    const user = await this.userRepository.findByUsername(username);
-
-    if (!user ||!(await PasswordUtils.comparePassword(password, user.password))) {
-      throw new UnauthorizedException("Invalid credentials");
-    }
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepository.findById(id);
+    if (!user) throw new NotFoundException("User not found");
+    return user;
   }
 
-  async getProfileByName(username: string): Promise<User> {
-    const user = await this.userRepository.findByUsername(username);
-    if (!user)
-      throw new NotFoundException("User not found");
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) throw new NotFoundException("User not found");
     return user;
   }
 
   async updateUser(user: User): Promise<User> {
     return this.userRepository.updateUser(user);
+  }
+
+  async findAllUsers(): Promise<User[]> {
+    return this.userRepository.findAll();
+  }
+
+  async updateUserRole(userId: string, newRole: UserRole): Promise<void> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new NotFoundException("Пользователь не найден");
+    }
+
+    user.role = newRole;
+    await this.userRepository.updateUser(user);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.userRepository.deleteUser(id);
   }
 }

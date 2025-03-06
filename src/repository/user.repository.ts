@@ -14,23 +14,27 @@ export class UserRepository {
     return this.usersRepository.save(user);
   }
 
-  async findByUsername(username: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { username } });
+  async findByLogin(login: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { login } });
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { email } });
   }
 
   async findById(id: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { id } });
   }
 
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find();
+  }
+
   async updateUser(user: User): Promise<User> {
     return this.usersRepository.save(user);
   }
 
-  async resetAllPasswords(): Promise<void> {
-    await this.usersRepository
-      .createQueryBuilder()
-      .update(User)
-      .set({ password: null }) // Лучше заменить на временный пароль
-      .execute();
+  async deleteUser(id: string): Promise<void> {
+    await this.usersRepository.delete(id);
   }
 }

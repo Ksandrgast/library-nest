@@ -15,12 +15,12 @@ export class User {
 
   @Index()
   @Column({ unique: true, length: 100 })
-  username: string;
+  login: string;
 
   @Column({ unique: true, length: 100 })
   email: string;
 
-  @Column({ nullable: false }) // Пароль не может быть null
+  @Column({ nullable: false })
   password: string;
 
   @Column({ length: 100 })

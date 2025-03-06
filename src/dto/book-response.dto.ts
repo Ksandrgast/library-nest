@@ -7,9 +7,8 @@ export class BookResponseDto {
   description: string;
   year: number;
   quantity: number;
-  publisher: string;
-  category: string;
-  location: string;
+  categoryId: string;
+  locationId: string;
 
   constructor(book: Book) {
     this.id = book.id;
@@ -18,8 +17,7 @@ export class BookResponseDto {
     this.description = book.description;
     this.year = book.year;
     this.quantity = book.quantity;
-    this.publisher = book.publisher;
-    this.category = book.category?.name || "Неизвестно";
-    this.location = book.location?.shelf || "Неизвестно";
+    this.categoryId = book.category?.id;
+    this.locationId = book.location?.id;
   }
 }

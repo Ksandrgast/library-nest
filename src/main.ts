@@ -2,9 +2,11 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./module/app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { CustomExceptionHandler } from "./errors/filter/custom-exception.handler";
+import * as cors from "cors";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(cors());
 
   const config = new DocumentBuilder()
     .setTitle("API Documentation")
