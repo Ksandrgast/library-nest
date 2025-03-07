@@ -4,9 +4,11 @@ import {
   Index,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
 import { BookCategory } from "./book-category.entity";
 import { BookLocation } from "./book-location.entity";
+import { Booking } from "./booking.entity";
 
 @Entity()
 export class Book {
@@ -34,4 +36,7 @@ export class Book {
 
   @ManyToOne(() => BookLocation, (location) => location.books)
   location: BookLocation;
+
+  @OneToMany(() => Booking, (booking) => booking.book)
+  bookings: Booking[];
 }

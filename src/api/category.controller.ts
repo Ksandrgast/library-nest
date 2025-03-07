@@ -16,6 +16,7 @@ import { CategoryResponseDto } from "../dto/сategory-response.dto";
 import { RolesGuard } from "../guards/roles.guard";
 import { JwtAuthGuard } from "../guards/jwt.guard";
 import { Roles } from "../decorators/roles.decorator";
+import { UserRole } from "../enums/user-role.enum";
 
 @ApiTags("Categories")
 @Controller("categories")
@@ -25,7 +26,7 @@ export class CategoryController {
   @Post()
   @ApiOperation({ summary: "Создать новую категорию" })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles("admin")
+  @Roles(UserRole.ADMIN)
   @ApiResponse({ status: 201, type: CategoryResponseDto })
   async create(@Body() dto: CreateCategoryDto): Promise<CategoryResponseDto> {
     const category = await this.categoryService.createCategory(dto);
@@ -51,7 +52,7 @@ export class CategoryController {
   @Put(":id")
   @ApiOperation({ summary: "Обновить категорию" })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles("admin")
+  @Roles(UserRole.ADMIN)
   @ApiResponse({ status: 200, type: CategoryResponseDto })
   async update(
     @Param("id") id: string,
@@ -64,7 +65,7 @@ export class CategoryController {
   @Delete(":id")
   @ApiOperation({ summary: "Удалить категорию" })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles("admin")
+  @Roles(UserRole.ADMIN)
   @ApiResponse({ status: 204 })
   async delete(@Param("id") id: string): Promise<void> {
     return this.categoryService.deleteCategory(id);

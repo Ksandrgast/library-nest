@@ -6,12 +6,15 @@ import { BooksModule } from "./books.module";
 import { CategoryModule } from "./category.module";
 import { LocationModule } from "./location.module";
 import { AuthModule } from "./auth.module";
+import { ScheduleModule } from "@nestjs/schedule";
+import { BookingModule } from "./booking.module";
 
 @Module({
   imports: [
     // Загружаем переменные окружения из .env
     ConfigModule.forRoot({ isGlobal: true }),
-
+    // ЗАпускаем Sheduler
+    ScheduleModule.forRoot(),
     // Настройка TypeORM с использованием переменных из .env
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -30,6 +33,7 @@ import { AuthModule } from "./auth.module";
     AuthModule,
     UsersModule,
     BooksModule,
+    BookingModule,
     CategoryModule,
     LocationModule,
   ],

@@ -9,14 +9,3 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: pwd
       POSTGRES_DB: library
-  redis:
-    image: redis:latest
-    command: redis-server --requirepass redis_password
-    ports:
-      - "6379:6379"
-    environment:
-      REDIS_PASSWORD: redis_password
-#  mongo:
-#    image: mongo:latest
-#    ports:
-#      - "27017:27017"
