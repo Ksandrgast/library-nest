@@ -17,7 +17,7 @@ export class BookResponseDto {
     this.description = book.description;
     this.year = book.year;
     this.quantity = book.quantity;
-    this.categoryId = book.category?.id;
-    this.locationId = book.location?.id;
+    this.categoryId = book.categoryId;
+    this.locationId = book.locationId;
   }
 }

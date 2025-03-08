@@ -15,11 +15,11 @@ export class UserRepository {
   }
 
   async findByLogin(login: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { login } });
+    return this.usersRepository.findOne({ where: { login, isDeleted: false } });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { email } });
+    return this.usersRepository.findOne({ where: { email, isDeleted: false } });
   }
 
   async findById(id: string): Promise<User | null> {
@@ -27,7 +27,7 @@ export class UserRepository {
   }
 
   async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ where: { isDeleted: false } });
   }
 
   async updateUser(user: User): Promise<User> {
@@ -35,6 +35,6 @@ export class UserRepository {
   }
 
   async deleteUser(id: string): Promise<void> {
-    await this.usersRepository.delete(id);
+    await this.usersRepository.update(id, { isDeleted: true });
   }
 }

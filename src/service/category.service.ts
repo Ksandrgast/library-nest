@@ -18,7 +18,7 @@ export class CategoryService {
   }
 
   async getAllCategories(): Promise<BookCategory[]> {
-    return await this.categoryRepository.find();
+    return await this.categoryRepository.find({ where: { isDeleted: false } });
   }
 
   async getCategoryById(id: string): Promise<BookCategory> {
@@ -40,7 +40,9 @@ export class CategoryService {
   }
 
   async deleteCategory(id: string): Promise<void> {
-    const result = await this.categoryRepository.delete(id);
+    const result = await this.categoryRepository.update(id, {
+      isDeleted: true,
+    });
     if (result.affected === 0) {
       throw new NotFoundException(`Категория с id ${id} не найдена`);
     }

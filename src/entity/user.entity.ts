@@ -37,12 +37,15 @@ export class User {
   @Column({ type: "enum", enum: UserRole, default: UserRole.READER })
   role: UserRole;
 
+  @OneToMany(() => Booking, (booking) => booking.book)
+  bookings: Booking[];
+
   @CreateDateColumn()
   created: Date;
 
   @UpdateDateColumn()
   updated: Date;
 
-  @OneToMany(() => Booking, (booking) => booking.book)
-  bookings: Booking[];
+  @Column({ default: false })
+  isDeleted: boolean;
 }

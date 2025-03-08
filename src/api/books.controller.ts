@@ -8,6 +8,8 @@ import {
   Body,
   ParseUUIDPipe,
   UseGuards,
+  Query,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { BooksService } from "../service/books.service";
@@ -23,15 +25,18 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  @ApiOperation({ summary: "Получить список всех книг" })
-  @ApiResponse({
-    status: 200,
-    description: "Список книг",
-    type: [BookResponseDto],
-  })
-  async getAllBooks(): Promise<BookResponseDto[]> {
-    const books = await this.booksService.getAllBooks();
-    return books.map((book) => new BookResponseDto(book));
+  async getAllBooks(
+    @Query("search") search?: string,
+    @Query("category") categoryId?: string,
+    @Query("page", ParseIntPipe) page = 0,
+    @Query("limit", ParseIntPipe) limit = 10,
+  ) {
+    return this.booksService.getBooksWithParams(
+      search,
+      categoryId,
+      page,
+      limit,
+    );
   }
 
   @Get(":id")

@@ -23,7 +23,7 @@ export class BookingService {
 
   async getUserBookings(userId: string) {
     return this.bookingRepo.find({
-      where: { user: { id: userId } },
+      where: { user: { id: userId }, isDeleted: false },
       relations: ["book"],
       order: {
         status: "ASC",
@@ -33,6 +33,7 @@ export class BookingService {
 
   async getAllBookings() {
     return this.bookingRepo.find({
+      where: { isDeleted: false },
       relations: ["book", "user"],
       order: {
         status: "ASC",
@@ -101,7 +102,7 @@ export class BookingService {
       throw new NotFoundException("Бронирование не найдено");
     }
 
-    await this.bookingRepo.remove(booking);
+    await this.bookingRepo.update(bookingId, { isDeleted: true });
     return { message: "Бронирование отменено" };
   }
 

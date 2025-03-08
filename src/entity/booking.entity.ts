@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Book } from "./book.entity";
 import { User } from "./user.entity";
 import { BookingStatus } from "../enums/booking-status.enum";
@@ -22,4 +29,13 @@ export class Booking {
 
   @Column({ type: "enum", enum: BookingStatus })
   status: BookingStatus;
+
+  @CreateDateColumn()
+  created: Date;
+
+  @UpdateDateColumn()
+  updated: Date;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 }

@@ -18,7 +18,7 @@ export class LocationService {
   }
 
   async getAllLocations(): Promise<BookLocation[]> {
-    return await this.locationRepository.find();
+    return await this.locationRepository.find({ where: { isDeleted: false } });
   }
 
   async getLocationById(id: string): Promise<BookLocation> {
@@ -40,7 +40,9 @@ export class LocationService {
   }
 
   async deleteLocation(id: string): Promise<void> {
-    const result = await this.locationRepository.delete(id);
+    const result = await this.locationRepository.update(id, {
+      isDeleted: true,
+    });
     if (result.affected === 0) {
       throw new NotFoundException(`Локация с id ${id} не найдена`);
     }

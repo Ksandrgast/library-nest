@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Book } from "./book.entity";
 
 @Entity()
@@ -17,4 +24,13 @@ export class BookCategory {
 
   @OneToMany(() => Book, (book) => book.category)
   books: Book[];
+
+  @CreateDateColumn()
+  created: Date;
+
+  @UpdateDateColumn()
+  updated: Date;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 }

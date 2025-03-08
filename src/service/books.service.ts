@@ -6,6 +6,7 @@ import { BookDto } from "../dto/book.dto";
 import { BookCategory } from "../entity/book-category.entity";
 import { BookLocation } from "../entity/book-location.entity";
 import { BookRepository } from "../repository/book.repository";
+import { BookResponseDto } from "../dto/book-response.dto";
 
 @Injectable()
 export class BooksService {
@@ -20,10 +21,34 @@ export class BooksService {
     private readonly locationRepository: Repository<BookLocation>,
   ) {}
 
-  async getAllBooks(): Promise<Book[]> {
-    return this.bookRepository.find({
-      relations: ["category", "location"], // Добавил location в relations
-    });
+  async getBooksWithParams(
+    search?: string,
+    categoryId?: string,
+    page = 0,
+    limit = 10,
+  ): Promise<{ books: BookResponseDto[]; total: number }> {
+    const query = this.bookRepository
+      .createQueryBuilder("book")
+      .leftJoinAndSelect("book.category", "category") // Подтягиваем категорию
+      .where("book.isDeleted = false");
+
+    if (search) {
+      query.andWhere(
+        "(LOWER(book.title) LIKE LOWER(:search) OR :search = ANY(book.authors))",
+        { search: `%${search}%` },
+      );
+    }
+
+    if (categoryId) {
+      query.andWhere("category.id = :categoryId", { categoryId });
+    }
+
+    const [books, total] = await query
+      .skip(page * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return { books: books.map((book) => new BookResponseDto(book)), total };
   }
 
   async getBookById(id: string): Promise<Book> {
@@ -97,6 +122,6 @@ export class BooksService {
   }
 
   async deleteBook(id: string): Promise<void> {
-    await this.bookRepository.delete(id);
+    await this.bookRepository.update(id, { isDeleted: true });
   }
 }
